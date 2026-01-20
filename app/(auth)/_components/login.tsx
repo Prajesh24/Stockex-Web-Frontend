@@ -3,12 +3,14 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useTransition } from "react";
+import { startTransition, useState, useTransition } from "react";
+import { handleLogin } from "@/lib/actions/auth-action";
 import { useRouter } from "next/navigation";
 import { LoginData,loginSchema } from "./schema";
 
 export default function LoginForm() {
   const router = useRouter();
+    const [error,setError] = useState()
   const {
     register,
     handleSubmit,
@@ -20,12 +22,16 @@ export default function LoginForm() {
 
   const [pending, setTransition] = useTransition();
 
-  const submit = async (values: LoginData) => {
-    setTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/dashboard");
-    });
-    console.log("login", values);
+const onSubmit = async (data: LoginData) => {
+    try{
+      const response = await handleLogin(data);
+      if(!response.success){
+        throw new Error(response.message || "Login failed")
+      }
+      startTransition(() => router.push("/dashboard"))
+    }catch(err: any){
+      setError(err.message);
+    }
   };
 
   return (
@@ -41,7 +47,7 @@ export default function LoginForm() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit(submit)} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
           {/* Email */}
           <div className="space-y-1">

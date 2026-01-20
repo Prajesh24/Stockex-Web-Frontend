@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { handleRegister } from "@/lib/actions/auth-action";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { RegisterData, registerSchema } from "./schema";
@@ -14,6 +15,9 @@ export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  const [error, setError] = useState<string | null>(null);
+
+
   const {
     register,
     handleSubmit,
@@ -23,13 +27,16 @@ export default function RegisterForm() {
     mode: "onSubmit",
   });
 
-  const submit = async (values: RegisterData) => {
-    startTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // router.push("/login");
-    });
-
-    console.log("register", values);
+  const onSubmit = async (data: RegisterData) => {
+    try{
+      const response = await handleRegister(data);
+      if(!response.success){
+        throw new Error(response.message)
+      }
+      startTransition(()=> router.push("/login"))
+    }catch(err: Error | any){
+      setError(err.message || "Registration Failed")
+    }
   };
 
   return (
@@ -43,7 +50,7 @@ export default function RegisterForm() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit(submit)} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
           {/* Name */}
           <div className="space-y-1">
