@@ -1,7 +1,7 @@
 "use server";
-import { login,register } from "../api/auth";
-import { LoginData,RegisterData } from "@/app/(auth)/_components/schema";
-import { setAuthToken,setUserData,clearAuthCookies } from "../cookie";
+import { login, register, createUser } from "../api/auth";
+import { LoginData, RegisterData, CreateUserData } from "@/app/(auth)/_components/schema";
+import { setAuthToken, setUserData, clearAuthCookies } from "../cookie";
 import { redirect } from "next/navigation";
 export const handleRegister = async (data: RegisterData) => {
     try {
@@ -40,6 +40,25 @@ export const handleLogin = async (data: LoginData) => {
         }
     } catch (error: Error | any) {
         return { success: false, message: error.message || 'Login action failed' }
+    }
+}
+
+export const handleCreateUser = async (data: CreateUserData) => {
+    try {
+        const response = await createUser(data)
+        if (response.success) {
+            return {
+                success: true,
+                message: 'User created successfully',
+                data: response.data
+            }
+        }
+        return {
+            success: false,
+            message: response.message || 'User creation failed'
+        }
+    } catch (error: Error | any) {
+        return { success: false, message: error.message || 'User creation action failed' }
     }
 }
 

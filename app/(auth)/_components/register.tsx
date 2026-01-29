@@ -1,23 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { handleRegister } from "@/lib/actions/auth-action";
-import { useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { RegisterData, registerSchema } from "./schema";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { handleRegister } from "@/lib/actions/auth-action";
 
 export default function RegisterForm() {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-
-  const [error, setError] = useState<string | null>(null);
-
-
   const {
     register,
     handleSubmit,
@@ -27,16 +19,26 @@ export default function RegisterForm() {
     mode: "onSubmit",
   });
 
-  const onSubmit = async (data: RegisterData) => {
-    try{
-      const response = await handleRegister(data);
-      if(!response.success){
-        throw new Error(response.message)
+  const [pending, setTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  const onSubmit = async (values: RegisterData) => {
+    setError(null);
+    setTransition(async () => {
+      try {
+        const response = await handleRegister(values);
+        if (!response.success) {
+          throw new Error(response.message);
+        }
+        if (response.success) {
+          router.push("/login");
+        } else {
+          setError("Registration failed");
+        }
+      } catch (err: Error | any) {
+        setError(err.message || "Registration failed");
       }
-      startTransition(()=> router.push("/login"))
-    }catch(err: Error | any){
-      setError(err.message || "Registration Failed")
-    }
+    });
   };
 
   return (
@@ -85,46 +87,32 @@ export default function RegisterForm() {
           </div>
 
           {/* Password */}
-          <div className="space-y-1 relative">
+          <div className="space-y-1">
             <label className="text-sm text-gray-300">Password</label>
             <input
-              type={showPassword ? "text" : "password"}
+              type="password"
               placeholder="••••••••"
               {...register("password")}
               className="h-11 w-full rounded-lg bg-black/40 px-4 text-sm text-white
                          border border-white/10 focus:border-green-500
                          focus:ring-1 focus:ring-green-500 outline-none"
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-[35px] text-sm text-gray-400 hover:text-white"
-            >
-              {showPassword ? "Hide" : "Show"}
-            </button>
             {errors.password?.message && (
               <p className="text-xs text-red-500">{errors.password.message}</p>
             )}
           </div>
 
           {/* Confirm Password */}
-          <div className="space-y-1 relative">
+          <div className="space-y-1">
             <label className="text-sm text-gray-300">Confirm Password</label>
             <input
-              type={showConfirm ? "text" : "password"}
+              type="password"
               placeholder="••••••••"
               {...register("confirmPassword")}
               className="h-11 w-full rounded-lg bg-black/40 px-4 text-sm text-white
                          border border-white/10 focus:border-green-500
                          focus:ring-1 focus:ring-green-500 outline-none"
             />
-            <button
-              type="button"
-              onClick={() => setShowConfirm(!showConfirm)}
-              className="absolute right-3 top-[35px] text-sm text-gray-400 hover:text-white"
-            >
-              {showConfirm ? "Hide" : "Show"}
-            </button>
             {errors.confirmPassword?.message && (
               <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>
             )}
