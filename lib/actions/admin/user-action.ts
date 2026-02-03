@@ -6,7 +6,7 @@ export const handleCreateUser = async (data: FormData) => {
     try {
         const response = await createUser(data)
         if (response.success) {
-            revalidatePath('/admin/users');
+            revalidatePath('/admin/');
             return {
                 success: true,
                 message: 'Registration successful',

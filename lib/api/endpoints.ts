@@ -7,11 +7,11 @@ export const API = {
     },
     ADMIN: {
         USER: {
-            CREATE: '/api/admin/users',
-            LIST: '/api/admin/users',
-            GET: '/api/admin/users',
-            UPDATE: '/api/admin/users',
-            DELETE: '/api/admin/users',
+            CREATE: '/api/admin/',
+            LIST: '/api/admin/',
+            // GET: '/api/admin/users',
+            // UPDATE: '/api/admin/users',
+            // DELETE: '/api/admin/users',
         }
     }
 }

@@ -1,9 +1,10 @@
-import CreateUserForm from "../users/_component/CreateUserForm";
+import Link from "next/link";
 
 export default function Page() {
     return (
         <div>
-            <CreateUserForm/>
+            <Link className="text-blue-500 border border-blue-500 p-2 rounded inline-block"
+             href="/admin/users/create">Create User</Link>
         </div>
     );
 }
