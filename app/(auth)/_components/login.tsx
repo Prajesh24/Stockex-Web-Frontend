@@ -6,13 +6,13 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { handleLogin } from "@/lib/actions/auth-action";
 import { useRouter } from "next/navigation";
-import { LoginData, loginSchema } from "./schema";
+import { LoginData, loginSchema } from "../schema";
 
 export default function LoginForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [pending, setTransition] = useTransition();
-  
+  const [pending, startTransition] = useTransition();
+
   const {
     register,
     handleSubmit,
@@ -24,7 +24,7 @@ export default function LoginForm() {
 
   const submit = async (values: LoginData) => {
     setError(null);
-    setTransition(async () => {
+    startTransition(async () => {
       try {
         const response = await handleLogin(values);
         if (!response.success) {
@@ -41,7 +41,7 @@ export default function LoginForm() {
         } else {
           setError("Login failed");
         }
-      } catch (err: Error | any) {
+      } catch (err: any) {
         setError(err.message || "Login failed");
       }
     });
@@ -57,14 +57,15 @@ export default function LoginForm() {
           <p className="mt-1 text-sm text-gray-400">Log in to your account</p>
         </div>
 
+        {/* Error message */}
+        {error && (
+          <div className="mb-6 rounded-md bg-red-500/10 p-3 text-sm text-red-400 border border-red-500/20">
+            {error}
+          </div>
+        )}
+
         {/* Form */}
         <form onSubmit={handleSubmit(submit)} className="space-y-5">
-
-          {error && (
-            <div className="rounded-md bg-red-500/10 p-3 text-sm text-red-400 border border-red-500/20">
-              {error}
-            </div>
-          )}
 
           <div className="space-y-1">
             <label className="text-sm text-gray-300">Email</label>
@@ -98,6 +99,16 @@ export default function LoginForm() {
             {errors.password?.message && (
               <p className="text-xs text-red-400">{errors.password.message}</p>
             )}
+          </div>
+
+          {/* Forgot Password Link */}
+          <div className="flex justify-end">
+            <Link
+              href="/request-reset-password"
+              className="text-sm text-green-400 hover:text-green-300 transition-colors"
+            >
+              Forgot password?
+            </Link>
           </div>
 
           <button

@@ -5,18 +5,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { handleCreateUser } from "@/lib/actions/admin/user-action";
-export default function CreateUserForm() {
+import { handleUpdateUser } from "@/lib/actions/admin/user-action";
+import Image from "next/image";
+export default function UpdateUserForm(
+    { user }: { user: any }
+) {
 
     const [pending, startTransition] = useTransition();
-   const { register, handleSubmit, control, reset, formState:{errors,isSubmitting} } =
-  useForm<UserData>({
-    resolver: zodResolver(UserSchema),
-    defaultValues: {
-      role: "user",
-    },
-  });
-
+    const { register, handleSubmit, control, reset, formState: { errors, isSubmitting } } = useForm<Partial<UserData>>({
+        resolver: zodResolver(UserSchema.partial()),
+        defaultValues: {
+            name: user.name || '',
+            email: user.email || '',
+            imageUrl: undefined,
+        }
+    });
     const [error, setError] = useState<string | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -42,7 +45,7 @@ export default function CreateUserForm() {
         }
     };
 
-    const onSubmit = async (data: UserData) => {
+    const onSubmit = async (data: Partial<UserData>) => {
         setError(null);
         startTransition(async () => {
             try {
@@ -50,28 +53,25 @@ export default function CreateUserForm() {
                 if (data.name) {
                     formData.append('name', data.name);
                 }
-                formData.append('email', data.email);
-                formData.append('password', data.password);
-                formData.append('confirmPassword', data.confirmPassword);
-                // formData.append('role','user');
+                if (data.email) {
+                    formData.append('email', data.email);
+                }
 
                 if (data.imageUrl) {
                     formData.append('imageUrl', data.imageUrl);
                 }
-                const response = await handleCreateUser(formData);
-                console.log("this is new",response)
+                const response = await handleUpdateUser(user._id, formData);
+
                 if (!response.success) {
-                    // throw new Error(response.message || 'Create profile failed');
-                    toast.error(response.message || 'Create profile failed');
-                
+                    throw new Error(response.message || 'Update profile failed');
                 }
                 reset();
                 handleDismissImage();
-                toast.success('Profile Created successfully');
+                toast.success('Profile Updated successfully');
 
             } catch (error: Error | any) {
-                toast.error(error.message || 'Create profile failed');
-                setError(error.message || 'Create profile failed');
+                toast.error(error.message || 'Update profile failed');
+                setError(error.message || 'Update profile failed');
             }
         });
 
@@ -102,11 +102,26 @@ export default function CreateUserForm() {
                             )}
                         />
                     </div>
-                ) : (
-                    <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center">
-                        <span className="text-gray-600">No Image</span>
-                    </div>
-                )}
+                ) :
+
+                    (
+                        user.imageUrl ? (
+                            <div className="relative w-24 h-24">
+                                <Image
+                                    src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${user.imageUrl}`}
+                                    alt="Profile Image"
+                                    className="w-24 h-24 rounded-full object-cover"
+                                    width={96}
+                                    height={96}
+                                />
+                               
+                            </div>
+                        ) : (
+                            <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center">
+                                <span className="text-gray-600">No Image</span>
+                            </div>
+                        )
+                    )}
 
             </div>
             {/* Profile Image Input */}
@@ -143,6 +158,20 @@ export default function CreateUserForm() {
                     )}
                 </div>
 
+                {/* <div className="space-y-1">
+                    <label className="text-sm font-medium" htmlFor="lastName">Last name</label>
+                    <input
+                        id="lastName"
+                        type="text"
+                        autoComplete="family-name"
+                        className="h-10 w-full rounded-md border border-black/10 dark:border-white/15 bg-background px-3 text-sm outline-none focus:border-foreground/40"
+                        {...register("lastName")}
+                        placeholder="Doe"
+                    />
+                    {errors.lastName?.message && (
+                        <p className="text-xs text-red-600">{errors.lastName.message}</p>
+                    )}
+                </div> */}
             </div>
 
             <div className="space-y-1">
@@ -160,43 +189,27 @@ export default function CreateUserForm() {
                 )}
             </div>
 
-           
-            <div className="space-y-1">
-                <label className="text-sm font-medium" htmlFor="password">Password</label>
+            {/* <div className="space-y-1">
+                <label className="text-sm font-medium" htmlFor="username">Username</label>
                 <input
-                    id="password"
-                    type="password"
-                    autoComplete="new-password"
+                    id="username"
+                    type="text"
+                    autoComplete="username"
                     className="h-10 w-full rounded-md border border-black/10 dark:border-white/15 bg-background px-3 text-sm outline-none focus:border-foreground/40"
-                    {...register("password")}
-                    placeholder="••••••"
+                    {...register("username")}
+                    placeholder="Jane Doe"
                 />
-                {errors.password?.message && (
-                    <p className="text-xs text-red-600">{errors.password.message}</p>
+                {errors.username?.message && (
+                    <p className="text-xs text-red-600">{errors.username.message}</p>
                 )}
-            </div>
-
-            <div className="space-y-1">
-                <label className="text-sm font-medium" htmlFor="confirmPassword">Confirm password</label>
-                <input
-                    id="confirmPassword"
-                    type="password"
-                    autoComplete="new-password"
-                    className="h-10 w-full rounded-md border border-black/10 dark:border-white/15 bg-background px-3 text-sm outline-none focus:border-foreground/40"
-                    {...register("confirmPassword")}
-                    placeholder="••••••"
-                />
-                {errors.confirmPassword?.message && (
-                    <p className="text-xs text-red-600">{errors.confirmPassword.message}</p>
-                )}
-            </div>
+            </div> */}
 
             <button
                 type="submit"
                 disabled={isSubmitting || pending}
                 className="h-10 w-full rounded-md bg-foreground text-background text-sm font-semibold hover:opacity-90 disabled:opacity-60"
             >
-                {isSubmitting || pending ? "Creating account..." : "Create account"}
+                {isSubmitting || pending ? "Updating account..." : "Update account"}
             </button>
         </form>
     );
