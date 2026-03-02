@@ -95,7 +95,7 @@ export default function CreateUserForm() {
                                 <button
                                     type="button"
                                     onClick={() => handleDismissImage(onChange)}
-                                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
+                                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-white hover:bg-red-600"
                                 >
                                     ✕
                                 </button>
@@ -111,7 +111,7 @@ export default function CreateUserForm() {
             </div>
             {/* Profile Image Input */}
             <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">Profile Image</label>
+                <label className="block text-white font-medium mb-1">Profile Image</label>
                 <Controller
                     name="imageUrl"
                     control={control}
@@ -121,20 +121,21 @@ export default function CreateUserForm() {
                             type="file"
                             onChange={(e) => handleImageChange(e.target.files?.[0], onChange)}
                             accept=".jpg,.jpeg,.png,.webp"
+                            className="text-white"
                         />
                     )}
                 />
-                {errors.imageUrl && <p className="text-sm text-red-600">{errors.imageUrl.message}</p>}
+                {errors.imageUrl && <p className="text-white text-red-600">{errors.imageUrl.message}</p>}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                    <label className="text-sm font-medium" htmlFor="name">Full Name</label>
+                    <label className="text-white font-medium" htmlFor="name">Full Name</label>
                     <input
                         id="name"
                         type="text"
                         autoComplete="given-name"
-                        className="h-10 w-full rounded-md border border-black/10 dark:border-white/15 bg-background px-3 text-sm outline-none focus:border-foreground/40"
+                        className="h-10 w-full rounded-md border border-black/10 dark:border-white/15 bg-background px-3 text-white outline-none focus:border-foreground/40"
                         {...register("name")}
                         placeholder="Jane"
                     />
@@ -146,28 +147,28 @@ export default function CreateUserForm() {
             </div>
 
             <div className="space-y-1">
-                <label className="text-sm font-medium" htmlFor="email">Email</label>
+                <label className="text-white font-medium" htmlFor="email">Email</label>
                 <input
                     id="email"
                     type="email"
                     autoComplete="email"
-                    className="h-10 w-full rounded-md border border-black/10 dark:border-white/15 bg-background px-3 text-sm outline-none focus:border-foreground/40"
+                    className="h-10 w-full rounded-md border border-black/10 dark:border-white/15 bg-background px-3 text-white outline-none focus:border-foreground/40"
                     {...register("email")}
                     placeholder="you@example.com"
                 />
                 {errors.email?.message && (
-                    <p className="text-xs text-red-600">{errors.email.message}</p>
+                    <p className="text-white text-red-600">{errors.email.message}</p>
                 )}
             </div>
 
            
             <div className="space-y-1">
-                <label className="text-sm font-medium" htmlFor="password">Password</label>
+                <label className="text-white font-medium" htmlFor="password">Password</label>
                 <input
                     id="password"
                     type="password"
                     autoComplete="new-password"
-                    className="h-10 w-full rounded-md border border-black/10 dark:border-white/15 bg-background px-3 text-sm outline-none focus:border-foreground/40"
+                    className="h-10 w-full rounded-md border border-black/10 dark:border-white/15 bg-background px-3 text-white outline-none focus:border-foreground/40"
                     {...register("password")}
                     placeholder="••••••"
                 />
@@ -177,12 +178,12 @@ export default function CreateUserForm() {
             </div>
 
             <div className="space-y-1">
-                <label className="text-sm font-medium" htmlFor="confirmPassword">Confirm password</label>
+                <label className="text-white font-medium" htmlFor="confirmPassword">Confirm password</label>
                 <input
                     id="confirmPassword"
                     type="password"
                     autoComplete="new-password"
-                    className="h-10 w-full rounded-md border border-black/10 dark:border-white/15 bg-background px-3 text-sm outline-none focus:border-foreground/40"
+                    className="h-10 w-full rounded-md border border-black/10 dark:border-white/15 bg-background px-3 text-white outline-none focus:border-foreground/40"
                     {...register("confirmPassword")}
                     placeholder="••••••"
                 />
@@ -194,7 +195,7 @@ export default function CreateUserForm() {
             <button
                 type="submit"
                 disabled={isSubmitting || pending}
-                className="h-10 w-full rounded-md bg-foreground text-background text-sm font-semibold hover:opacity-90 disabled:opacity-60"
+                className="h-10 w-full rounded-md bg-foreground text-background text-black font-semibold hover:opacity-90 disabled:opacity-60"
             >
                 {isSubmitting || pending ? "Creating account..." : "Create account"}
             </button>

@@ -12,4 +12,14 @@ export const UserSchema = z.object({
     message: "Passwords do not match",
 });
 
+
+export const UpdateUserSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters" }).optional(),
+  email: z.string().email({ message: "Enter a valid email" }).optional(),
+  role: z.enum(["user", "admin"]).optional(),
+  imageUrl: z.instanceof(File).optional(),
+});
+
+// Types
 export type UserData = z.infer<typeof UserSchema>;
+export type UpdateUserData = z.infer<typeof UpdateUserSchema>;

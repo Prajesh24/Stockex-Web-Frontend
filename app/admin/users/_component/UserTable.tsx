@@ -134,7 +134,7 @@ const UserTable = (
                         }
                     }}
                     placeholder="Search users..."
-                    className="mr-2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="mr-2 px-4 py-2 border border-gray-300 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button onClick={handleSearchChange}
                     className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">

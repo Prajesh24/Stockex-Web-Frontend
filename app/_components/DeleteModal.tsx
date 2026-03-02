@@ -1,4 +1,3 @@
-
 interface DeleteModalProps {
   isOpen: null | boolean;
   onClose: () => void;
@@ -18,10 +17,14 @@ export default function DeleteModal({
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 ">
       <div className="bg-black p-6 shadow-lg w-[300px] rounded-lg border border-white">
-        <h2>{title}</h2>
-        <p >{description}</p>
+        <h2 className="text-white text-lg font-semibold mb-2">{title}</h2>
+
+        <p className="text-white/70 text-sm">{description}</p>
         <div className="mt-4 flex justify-end">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded mr-2 text-black">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-300 rounded mr-2 text-black"
+          >
             Cancel
           </button>
           <button

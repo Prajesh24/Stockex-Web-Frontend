@@ -121,12 +121,13 @@ export default function UpdateUserForm({
 
                 {/* Profile Image Input */}
                 <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Profile Image</label>
+                    <label className="block text-white font-medium mb-1">Profile Image</label>
                     <Controller
                         name="image"
                         control={control}
                         render={({ field: { onChange } }) => (
                             <input
+                            className="text-white"
                                 ref={fileInputRef}
                                 type="file"
                                 onChange={(e) => handleImageChange(e.target.files?.[0], onChange)}
@@ -134,36 +135,27 @@ export default function UpdateUserForm({
                             />
                         )}
                     />
-                    {errors.image && <p className="text-sm text-red-600">{errors.image.message}</p>}
+                    {errors.image && <p className="text-white text-red-600">{errors.image.message}</p>}
                 </div>
-                {/* <div>
-                    <label className="block text-sm font-medium mb-1" htmlFor="username">Username</label>
-                    <input
-                        id="username"
-                        type="text"
-                        {...register("username")}
-                        className="w-full border border-gray-300 rounded px-3 py-2"
-                    />
-                    {errors.username && <p className="text-sm text-red-600">{errors.username.message}</p>}
-                </div> */}
+         
                 <div>
-                    <label className="block text-sm font-medium mb-1" htmlFor="email">Email</label>
+                    <label className="block text-white font-medium mb-1" htmlFor="email">Email</label>
                     <input
                         id="email"
                         type="email"
                         {...register("email")}
-                        className="w-full border border-gray-300 rounded px-3 py-2"
+                        className="w-full border border-gray-300 text-white rounded px-3 py-2"
                     />
                     {errors.email && <p className="text-sm text-red-600">{errors.email.message}</p>}
                 </div>
                 {/* First Name Input */}
                 <div>
-                    <label className="block text-sm font-medium mb-1" htmlFor="name">First Name</label>
+                    <label className="block text-white font-medium mb-1" htmlFor="name">Full Name</label>
                     <input
                         id="name"
                         type="text"
                         {...register("name")}
-                        className="w-full border border-gray-300 rounded px-3 py-2"
+                        className="w-full border border-gray-300 text-white rounded px-3 py-2"
                     />
                     {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
                 </div>
