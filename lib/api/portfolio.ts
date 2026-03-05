@@ -48,23 +48,23 @@ const debugRequest = async (method: string, url: string, data?: any) => {
 };
 
 export const getPortfolioApi = async (): Promise<PortfolioStock[]> => {
-  await debugRequest('GET', '/portfolio');
-  const res = await axiosInstance.get("/portfolio");
+  await debugRequest('GET', '/api/portfolio');
+  const res = await axiosInstance.get("api/portfolio");
   return res.data.data;
 };
 
 export const addStockApi = async (data: AddStockData): Promise<PortfolioStock> => {
-  await debugRequest('POST', '/portfolio', data);
-  const res = await axiosInstance.post("/portfolio", data);
+  await debugRequest('POST', '/api/portfolio', data);
+  const res = await axiosInstance.post("/api/portfolio", data);
   return res.data.data;
 };
 
 export const removeStockApi = async (id: string): Promise<void> => {
-  await axiosInstance.delete(`/portfolio/${id}`);
+  await axiosInstance.delete(`/api/portfolio/${id}`);
 };
 
 export const getPortfolioOverviewApi = async (): Promise<PortfolioOverview> => {
-  const res = await axiosInstance.get("/portfolio/overview");
+  const res = await axiosInstance.get("/api/portfolio/overview");
   return res.data.data;
 };
 
