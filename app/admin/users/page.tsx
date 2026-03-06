@@ -1,0 +1,49 @@
+import Link from "next/link";
+import { handleGetAllUsers } from "@/lib/actions/admin/user-action";
+import UserTable from "./_component/UserTable";
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+  const page = (params.page as string) || "1";
+  const size = (params.size as string) || "10";
+  const search = (params.search as string) || "";
+
+  const response = await handleGetAllUsers(page, size, search as string);
+
+  if (!response.success) {
+    throw new Error(response.message || "Failed to load users");
+  }
+
+  return (
+    <div>
+      <Link
+        href="/admin/users/create"
+        className="
+        inline-block 
+        px-4 py-2 
+        bg-green-500 
+        text-white 
+        font-semibold 
+        rounded-lg 
+        shadow-md 
+        hover:bg-green-600 
+        transition-colors 
+        duration-200
+        border border-green-600
+    "
+      >
+        Create User
+      </Link>
+
+      <UserTable
+        users={response.data}
+        pagination={response.pagination}
+        search={search}
+      />
+    </div>
+  );
+}
