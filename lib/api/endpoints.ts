@@ -17,5 +17,18 @@ export const API = {
             UPDATE: (userId: string) => `/api/admin/users/${userId}`,
             DELETE: (userId: string) => `/api/admin/users/${userId}`,
         }
-    }
+    },
+    PORTFOLIO: {
+    ADD:          '/api/portfolio',
+    GET_ALL:      '/api/portfolio',
+    OVERVIEW:     '/api/portfolio/overview',
+    SELL:         (id: string) => `/api/portfolio/${id}/sell`,  // ← /api prefix
+    SELL_HISTORY: '/api/portfolio/sell-history',
+    REMOVE:       (id: string) => `/api/portfolio/${id}`,
+},
+WATCHLIST: {
+    GET:    '/api/watchlist',
+    ADD:    '/api/watchlist',
+    REMOVE: (symbol: string) => `/api/watchlist/${symbol}`,
+},
 }

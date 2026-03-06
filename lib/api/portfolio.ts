@@ -38,37 +38,6 @@ export interface AddStockData {
   buyDate: string;
 }
 
-
-
-// DEBUG: Log the actual URL being called
-const debugRequest = async (method: string, url: string, data?: any) => {
-  const baseURL = (axiosInstance.defaults.baseURL || 'http://localhost:5050');
-  console.log(`🔍 ${method} ${baseURL}${url}`);
-  console.log('Headers:', axiosInstance.defaults.headers);
-};
-
-export const getPortfolioApi = async (): Promise<PortfolioStock[]> => {
-  await debugRequest('GET', '/api/portfolio');
-  const res = await axiosInstance.get("api/portfolio");
-  return res.data.data;
-};
-
-export const addStockApi = async (data: AddStockData): Promise<PortfolioStock> => {
-  await debugRequest('POST', '/api/portfolio', data);
-  const res = await axiosInstance.post("/api/portfolio", data);
-  return res.data.data;
-};
-
-export const removeStockApi = async (id: string): Promise<void> => {
-  await axiosInstance.delete(`/api/portfolio/${id}`);
-};
-
-export const getPortfolioOverviewApi = async (): Promise<PortfolioOverview> => {
-  const res = await axiosInstance.get("/api/portfolio/overview");
-  return res.data.data;
-};
-
-// lib/api/portfolio.ts
 export interface SellStockData {
   units: number;
   sellPrice: number;
@@ -84,14 +53,31 @@ export interface SellResult {
   sellDate: string;
 }
 
-// Sell stock API
-export const sellStockApi = async (id: string, data: SellStockData): Promise<SellResult> => {
-  const res = await axiosInstance.post(`/portfolio/${id}/sell`, data);
+export const getPortfolioApi = async (): Promise<PortfolioStock[]> => {
+  const res = await axiosInstance.get("/api/portfolio");  // fixed: was "api/portfolio" (missing slash)
   return res.data.data;
 };
 
-// Get sell history
+export const addStockApi = async (data: AddStockData): Promise<PortfolioStock> => {
+  const res = await axiosInstance.post("/api/portfolio", data);
+  return res.data.data;
+};
+
+export const removeStockApi = async (id: string): Promise<void> => {
+  await axiosInstance.delete(`/api/portfolio/${id}`);
+};
+
+export const getPortfolioOverviewApi = async (): Promise<PortfolioOverview> => {
+  const res = await axiosInstance.get("/api/portfolio/overview");
+  return res.data.data;
+};
+
+export const sellStockApi = async (id: string, data: SellStockData): Promise<SellResult> => {
+  const res = await axiosInstance.post(`/api/portfolio/${id}/sell`, data);  // fixed: was /portfolio/
+  return res.data.data;
+};
+
 export const getSellHistoryApi = async () => {
-  const res = await axiosInstance.get("/portfolio/sell-history");
+  const res = await axiosInstance.get("/api/portfolio/sell-history");  // fixed: was /portfolio/
   return res.data.data;
 };
